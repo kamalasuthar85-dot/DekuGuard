@@ -1,0 +1,21 @@
+name: DekuGuard
+version: ${project.version}
+main: dev.dekuguard.DekuGuard
+api-version: '1.20'
+description: Lightweight movement and combat anticheat
+commands:
+  dekuguard:
+    description: DekuGuard admin command
+    usage: /dekuguard <reload|alerts|vl <player>|reset <player>>
+    aliases: [dg]
+    permission: dekuguard.admin
+permissions:
+  dekuguard.admin:
+    description: Use /dekuguard
+    default: op
+  dekuguard.alerts:
+    description: Receive cheat alerts
+    default: op
+  dekuguard.bypass:
+    description: Bypass all checks
+    default: false

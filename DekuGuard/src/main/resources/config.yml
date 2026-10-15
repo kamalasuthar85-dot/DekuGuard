@@ -1,0 +1,89 @@
+# DekuGuard configuration
+#
+# Every flag adds to a per-check violation level (vl). vl decays over time.
+# When a check's vl reaches its punish-vl, every command in punish-commands runs from the console
+# and that vl resets. Start with a harmless command and watch alerts before enabling kicks/bans.
+
+general:
+  decay-seconds: 30            # vl drops by 1 every this many seconds
+  alert-cooldown-ms: 1000      # min time between alerts for the same player + check
+  log-to-console: true
+  log-to-file: true            # plugins/DekuGuard/violations.log
+  min-tps: 18.0                # movement checks pause below this TPS (Paper only)
+  disabled-worlds: []          # e.g. [world_creative, spawn]
+  punish-commands:
+    - "kick %player% &cUnfair advantage detected (%check%)"
+    # - "ban %player% 7d Cheating (%check%)"
+
+movement:
+  setback: true                # teleport the player to their last good ground position on a flag
+
+combat:
+  cancel-flagged-hits: true    # cancel the damage of a hit that failed a check
+
+checks:
+  speed:
+    enabled: true
+    max-horizontal: 0.46       # blocks per tick at default walk speed (sprint-jump is ~0.36-0.42)
+    buffer: 3
+    punish-vl: 12
+  fly:
+    enabled: true
+    tolerance: 0.06            # allowed difference from vanilla gravity per tick
+    buffer: 3
+    punish-vl: 10
+  step:
+    enabled: true              # also catches high jump
+    tolerance: 0.06
+    punish-vl: 8
+  nofall:
+    enabled: true
+    buffer: 2
+    punish-vl: 8
+  jesus:
+    enabled: true
+    ticks: 6                   # consecutive ticks walking on liquid
+    punish-vl: 8
+  timer:
+    enabled: true
+    max-credit-ms: 400         # how much burst (after lag) is allowed
+    threshold-ms: 100          # balance above this is a flag
+    punish-vl: 8
+  velocity:
+    enabled: true              # anti-knockback
+    min-velocity: 0.25         # ignore tiny pushes
+    min-ratio: 0.5             # player must travel at least this fraction of the velocity
+    buffer: 3
+    punish-vl: 8
+  reach:
+    enabled: true
+    max-distance: 3.1          # vanilla survival reach is 3.0
+    ping-leniency: 0.0015      # extra blocks per ms of ping (capped at 250ms)
+    player-target-leniency: 0.1
+    blatant-extra: 0.5         # beyond max + this, flag immediately (otherwise buffered)
+    buffer: 2
+    punish-vl: 10
+  killaura:
+    enabled: true
+    max-angle: 55              # degrees between crosshair and target hitbox
+    buffer: 3
+    punish-vl: 10
+  multiaura:
+    enabled: true
+    window-ms: 40              # two different targets hit within this window
+    punish-vl: 6
+  noswing:
+    enabled: true
+    buffer: 2
+    punish-vl: 8
+  criticals:
+    enabled: true
+    min-air-ticks: 3           # a real crit needs a few ticks of falling
+    buffer: 3
+    punish-vl: 8
+  autoclicker:
+    enabled: true
+    max-cps: 22
+    consistency-samples: 30
+    consistency-stddev-ms: 6   # humans are never this steady
+    punish-vl: 10
